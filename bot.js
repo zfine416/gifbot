@@ -151,6 +151,7 @@ function trollGibbs(botId) {
   var gibbsResponses = ['That sounds like a personal problem', 'Please stop', `You're a ${message}`, 'Why?', 'Where are you?', 'When are you going to be home?', 'No', 'Anyone else shitting?', 'Ugh'];
   var newRandom = Math.floor(Math.random() * gibbsResponses.length);
   botResponse = gibbsResponses[newRandom];
+  specificLog = botResponse;
   postMessage(botResponse, botId);
 }
 
