@@ -8,10 +8,11 @@ var giphyKey = process.env.giphyKey;
 var alphaVantageAPIKey = process.env.alphaVantageAPIKey;
 var botId = '1';
 
+var post;
 
 // - processes incoming groupme posts
 function respond() {
-  var post = JSON.parse(this.req.chunks[0]);
+  post = JSON.parse(this.req.chunks[0]);
   this.res.writeHead(200);
   console.log('post: ', post)
   sendingGroup = post.group_id;
@@ -103,6 +104,14 @@ function tagCheck(botId) {
   if (message.substring(0,1) == '$' && botId !== '1') {
     stockTag(botId);
   }
+
+  // Gibbs troll
+  if (post.user_id == '3706560') {
+    var random = Math.floor(Math.random() * 4);
+    if(random == 1) {
+      trollGibbs(botId);
+    }
+  }
 }
 
 
@@ -138,6 +147,13 @@ function gifTag(botId) {
   });
 }
 
+function trollGibbs(botId) {
+  var gibbsResponses = ['That sounds like a personal problem', 'Please stop', `You're a ${message}`, 'Why?', 'Where are you?', 'When are you going to be home?', 'No', 'Anyone else shitting?', 'Ugh'];
+  var newRandom = Math.floor(Math.random() * gibbsResponses.length);
+  botResponse = gibbsResponses[newRandom];
+  postMessage(botResponse, botId);
+}
+
 
 //stock quote
 function stockTag(botId) {
@@ -167,6 +183,8 @@ function stockTag(botId) {
 
 //posts message
 function postMessage(botResponse, botId) {
+  console.log('POST MESSAGE!')
+  console.log(botResponse, botId)
 
   var options, botReq;
   options = {
