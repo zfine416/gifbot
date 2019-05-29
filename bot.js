@@ -119,7 +119,7 @@ function botTag(botId) {
 
 //posts message
 function gifTag(botId) {
-  request('https://api.giphy.com/v1/gifs/translate?s=' + messageTrimmed + '&api_key=' + giphyKey +'=' + rating, function (error, response, body) {
+  request('https://api.giphy.com/v1/gifs/translate?s=' + messageTrimmed + '&api_key=' + giphyKey, function (error, response, body) {
   parsedData = JSON.parse(body);
   //did they use spaces?
   spaceCount = (message.split(" ").length - 1);
