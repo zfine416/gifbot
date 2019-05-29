@@ -4,18 +4,22 @@ var https = require('https');
 // https://dev.groupme.com/bots
 // https://dashboard.heroku.com/apps/groupme-gif-bot/settings
 var botName = process.env.botName;
+var giphyKey = process.env.giphyKey;
 var alphaVantageAPIKey = process.env.alphaVantageAPIKey;
 var botId = '1';
+
 
 // - processes incoming groupme posts
 function respond() {
   var post = JSON.parse(this.req.chunks[0]);
   this.res.writeHead(200);
-
+  console.log('post: ', post)
   sendingGroup = post.group_id;
   sendingUser = post.name;
   message = post.text;
   messageTrimmed = message.substring(1).trim();
+
+  console.log('group: ', sendingGroup, 'user: ', sendingUser)
 
   //From the main group?
   mainGroupId = process.env.mainGroupId;
@@ -115,7 +119,7 @@ function botTag(botId) {
 
 //posts message
 function gifTag(botId) {
-  request('https://api.giphy.com/v1/gifs/translate?s=' + messageTrimmed + '&api_key=nUPvLMDC26cn0c4heIYSx6bW8pZY9Gmh&rating=' + rating, function (error, response, body) {
+  request('https://api.giphy.com/v1/gifs/translate?s=' + messageTrimmed + '&api_key=' + giphyKey +'=' + rating, function (error, response, body) {
   parsedData = JSON.parse(body);
   //did they use spaces?
   spaceCount = (message.split(" ").length - 1);
@@ -123,9 +127,9 @@ function gifTag(botId) {
     console.log('too long - space count ' + spaceCount + ' message length: ' + messageTrimmed.length + ' status: ' + response.statusCode);
   }
 
-
-
+    console.log('status code: ', response.statusCode)
   if (!error && response.statusCode == 200 && parsedData && parsedData.data.images) {
+    console.log('sending again....')
     botResponse = parsedData.data.images.fixed_width.url;
     //downsized = parseFloat(parsedData.data.images.downsized.size).toLocaleString('en');
     specificLog = ('FIXED: ' + parseFloat(parsedData.data.images.fixed_width.size).toLocaleString('en') + ' RATING: ' + parsedData.data.rating + ' STATUS: ' + response.statusCode);
@@ -163,7 +167,7 @@ function stockTag(botId) {
 
 //posts message
 function postMessage(botResponse, botId) {
-  
+
   var options, botReq;
   options = {
     hostname: 'api.groupme.com',
@@ -171,7 +175,7 @@ function postMessage(botResponse, botId) {
     method: 'POST',
     "token" : 'f785ce5043270133562d05f0d49317f6',
     "bot_id" : botId,
-    "text" : botResponse 
+    "text" : botResponse
   };
 
   botReq = https.request(options, function(res) {
