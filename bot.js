@@ -108,6 +108,7 @@ function tagCheck(botId) {
   // Gibbs troll
   if (post.user_id == '3706560') {
     var random = Math.floor(Math.random() * 3);
+    console.log(`the random number is ... ${random}`)
     if(random == 1) {
       trollGibbs(botId);
     }
